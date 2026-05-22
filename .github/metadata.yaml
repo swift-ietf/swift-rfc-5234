@@ -8,3 +8,5 @@ topics:
   - parsing
   - abnf
 homepage: "https://swift-institute.org"
+readme:
+  family: E
