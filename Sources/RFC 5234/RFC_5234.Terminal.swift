@@ -1,4 +1,5 @@
 import ASCII_Primitives
+import ASCII_Primitives_Standard_Library_Integration
 
 extension RFC_5234 {
     /// A terminal element in an ABNF grammar.
@@ -24,7 +25,7 @@ extension RFC_5234 {
         /// Creates a case-insensitive string literal terminal.
         ///
         /// In RFC 5234, string literals are case-insensitive by default.
-        /// For example, "abc" matches "abc", "Abc", "ABC", etc.
+        /// For example, "abc" matches "abc", "Abc", and "ABC".
         ///
         /// - Parameter string: The string to match (case-insensitive)
         public static func string(_ string: String) -> Self {
