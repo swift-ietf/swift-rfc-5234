@@ -12,82 +12,84 @@ extension RFC_5234 {
     public struct Terminal: Hashable, Sendable, Codable {
         private let matcher: Matcher
 
-        private enum Matcher: Hashable, Sendable, Codable {
-            case string(String, caseSensitive: Bool)
-            case byteValue(UInt8)
-            case byteRange(UInt8, UInt8)
-        }
-
         private init(matcher: Matcher) {
             self.matcher = matcher
         }
+    }
+}
 
-        /// Creates a case-insensitive string literal terminal.
-        ///
-        /// In RFC 5234, string literals are case-insensitive by default.
-        /// For example, "abc" matches "abc", "Abc", and "ABC".
-        ///
-        /// - Parameter string: The string to match (case-insensitive)
-        public static func string(_ string: String) -> Self {
-            Self(matcher: .string(string, caseSensitive: false))
-        }
+extension RFC_5234.Terminal {
+    private enum Matcher: Hashable, Sendable, Codable {
+        case string(String, caseSensitive: Bool)
+        case byteValue(UInt8)
+        case byteRange(UInt8, UInt8)
+    }
 
-        /// Creates a case-sensitive string literal terminal.
-        ///
-        /// This method enables RFC 7405 %s"..." syntax for exact string matching.
-        /// Unlike the default case-insensitive matching, this matches only the exact case.
-        ///
-        /// - Note: This is an SPI for RFC 7405. Use RFC_7405 package for case-sensitive strings.
-        /// - Parameter string: The string to match (case-sensitive)
-        @_spi(RFC_7405)
-        public static func caseSensitiveString(_ string: String) -> Self {
-            Self(matcher: .string(string, caseSensitive: true))
-        }
+    /// Creates a case-insensitive string literal terminal.
+    ///
+    /// In RFC 5234, string literals are case-insensitive by default.
+    /// For example, "abc" matches "abc", "Abc", and "ABC".
+    ///
+    /// - Parameter string: The string to match (case-insensitive)
+    public static func string(_ string: String) -> Self {
+        Self(matcher: .string(string, caseSensitive: false))
+    }
 
-        /// Creates a terminal that matches a specific byte value.
-        ///
-        /// - Parameter byte: The byte value to match
-        public static func byte(_ byte: UInt8) -> Self {
-            Self(matcher: .byteValue(byte))
-        }
+    /// Creates a case-sensitive string literal terminal.
+    ///
+    /// This method enables RFC 7405 %s"..." syntax for exact string matching.
+    /// Unlike the default case-insensitive matching, this matches only the exact case.
+    ///
+    /// - Note: This is an SPI for RFC 7405. Use RFC_7405 package for case-sensitive strings.
+    /// - Parameter string: The string to match (case-sensitive)
+    @_spi(RFC_7405)
+    public static func caseSensitiveString(_ string: String) -> Self {
+        Self(matcher: .string(string, caseSensitive: true))
+    }
 
-        /// Creates a terminal that matches a range of byte values.
-        ///
-        /// - Parameters:
-        ///   - lower: The lower bound (inclusive)
-        ///   - upper: The upper bound (inclusive)
-        public static func byteRange(_ lower: UInt8, _ upper: UInt8) -> Self {
-            Self(matcher: .byteRange(lower, upper))
-        }
+    /// Creates a terminal that matches a specific byte value.
+    ///
+    /// - Parameter byte: The byte value to match
+    public static func byte(_ byte: UInt8) -> Self {
+        Self(matcher: .byteValue(byte))
+    }
 
-        /// Validates whether the given bytes match this terminal.
-        ///
-        /// - Parameter bytes: The bytes to validate
-        /// - Returns: `true` if the bytes match, `false` otherwise
-        public func matches(_ bytes: [UInt8]) -> Bool {
-            switch matcher {
-            case .string(let string, let caseSensitive):
-                let stringBytes = Array(string.utf8)
-                guard bytes.count == stringBytes.count else { return false }
-                if caseSensitive {
-                    return bytes == stringBytes
-                } else {
-                    return zip(bytes, stringBytes).allSatisfy { byte, expected in
-                        let lower = ASCII.Case.Conversion.convert(byte, to: .lower)
-                        let expectedLower = ASCII.Case.Conversion.convert(
-                            expected,
-                            to: .lower
-                        )
-                        return lower == expectedLower
-                    }
+    /// Creates a terminal that matches a range of byte values.
+    ///
+    /// - Parameters:
+    ///   - lower: The lower bound (inclusive)
+    ///   - upper: The upper bound (inclusive)
+    public static func byteRange(_ lower: UInt8, _ upper: UInt8) -> Self {
+        Self(matcher: .byteRange(lower, upper))
+    }
+
+    /// Validates whether the given bytes match this terminal.
+    ///
+    /// - Parameter bytes: The bytes to validate
+    /// - Returns: `true` if the bytes match, `false` otherwise
+    public func matches(_ bytes: [UInt8]) -> Bool {
+        switch matcher {
+        case .string(let string, let caseSensitive):
+            let stringBytes = Array(string.utf8)
+            guard bytes.count == stringBytes.count else { return false }
+            if caseSensitive {
+                return bytes == stringBytes
+            } else {
+                return zip(bytes, stringBytes).allSatisfy { byte, expected in
+                    let lower = ASCII.Case.Conversion.convert(byte, to: .lower)
+                    let expectedLower = ASCII.Case.Conversion.convert(
+                        expected,
+                        to: .lower
+                    )
+                    return lower == expectedLower
                 }
-
-            case .byteValue(let value):
-                return bytes.count == 1 && bytes[0] == value
-
-            case .byteRange(let lower, let upper):
-                return bytes.count == 1 && bytes[0] >= lower && bytes[0] <= upper
             }
+
+        case .byteValue(let value):
+            return bytes.count == 1 && bytes[0] == value
+
+        case .byteRange(let lower, let upper):
+            return bytes.count == 1 && bytes[0] >= lower && bytes[0] <= upper
         }
     }
 }
