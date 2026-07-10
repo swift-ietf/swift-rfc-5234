@@ -276,7 +276,8 @@ extension RFC_5234.Element.Test {
             try RFC_5234.Validator.validate([0x41, 0x41, 0x41], against: rule)  // Exact ✓
 
             #expect(throws: RFC_5234.Validator.Error.self) {
-                try RFC_5234.Validator.validate([0x41, 0x41, 0x41, 0x41], against: rule)  // Too many
+                // Too many
+                try RFC_5234.Validator.validate([0x41, 0x41, 0x41, 0x41], against: rule)
             }
         }
     }

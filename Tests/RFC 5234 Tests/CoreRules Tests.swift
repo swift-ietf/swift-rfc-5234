@@ -54,14 +54,20 @@ extension RFC_5234.CoreRules {
         @Test
         func `HEXDIG matches A-F (uppercase)`() throws {
             for char in ["A", "B", "C", "D", "E", "F"] {
-                try RFC_5234.Validator.validate(Array(char.utf8), against: RFC_5234.CoreRules.hexdig)
+                try RFC_5234.Validator.validate(
+                    Array(char.utf8),
+                    against: RFC_5234.CoreRules.hexdig
+                )
             }
         }
 
         @Test
         func `HEXDIG matches a-f (lowercase, case-insensitive)`() throws {
             for char in ["a", "b", "c", "d", "e", "f"] {
-                try RFC_5234.Validator.validate(Array(char.utf8), against: RFC_5234.CoreRules.hexdig)
+                try RFC_5234.Validator.validate(
+                    Array(char.utf8),
+                    against: RFC_5234.CoreRules.hexdig
+                )
             }
         }
 
