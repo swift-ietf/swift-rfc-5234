@@ -10,21 +10,15 @@ extension RFC_5234 {
     /// - Numeric values (byte ranges)
     /// - Character ranges
     public struct Terminal: Hashable, Sendable, Codable {
-        private let matcher: Matcher
+        let matcher: Matcher
 
-        private init(matcher: Matcher) {
+        init(matcher: Matcher) {
             self.matcher = matcher
         }
     }
 }
 
 extension RFC_5234.Terminal {
-    private enum Matcher: Hashable, Sendable, Codable {
-        case string(String, caseSensitive: Bool)
-        case byteValue(UInt8)
-        case byteRange(UInt8, UInt8)
-    }
-
     /// Creates a case-insensitive string literal terminal.
     ///
     /// In RFC 5234, string literals are case-insensitive by default.
