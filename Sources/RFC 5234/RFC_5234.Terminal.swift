@@ -11,10 +11,6 @@ extension RFC_5234 {
     /// - Character ranges
     public struct Terminal: Hashable, Sendable, Codable {
         let matcher: Matcher
-
-        init(matcher: Matcher) {
-            self.matcher = matcher
-        }
     }
 }
 
