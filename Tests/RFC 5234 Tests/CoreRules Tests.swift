@@ -1,8 +1,3 @@
-// CoreRules Tests.swift
-// swift-rfc-5234
-//
-// Tests for RFC_5234.CoreRules
-
 import RFC_5234
 import Testing
 
@@ -12,7 +7,7 @@ extension RFC_5234.CoreRules {
         @Test
         func `ALPHA matches uppercase letters`() throws {
             let result: Result<Void, RFC_5234.Validator.Error> = try (UInt8(0x41)...UInt8(0x5A))
-                .reduce(.success(())) { partial, byte in  // A-Z
+                .reduce(.success(())) { partial, byte in
                     guard case .success = partial else { return partial }
                     do throws(RFC_5234.Validator.Error) {
                         try RFC_5234.Validator.validate([byte], against: RFC_5234.CoreRules.alpha)
@@ -27,7 +22,7 @@ extension RFC_5234.CoreRules {
         @Test
         func `ALPHA matches lowercase letters`() throws {
             let result: Result<Void, RFC_5234.Validator.Error> = try (UInt8(0x61)...UInt8(0x7A))
-                .reduce(.success(())) { partial, byte in  // a-z
+                .reduce(.success(())) { partial, byte in
                     guard case .success = partial else { return partial }
                     do throws(RFC_5234.Validator.Error) {
                         try RFC_5234.Validator.validate([byte], against: RFC_5234.CoreRules.alpha)
@@ -42,14 +37,14 @@ extension RFC_5234.CoreRules {
         @Test
         func `ALPHA rejects digits`() {
             #expect(throws: RFC_5234.Validator.Error.self) {
-                try RFC_5234.Validator.validate([0x30], against: RFC_5234.CoreRules.alpha)  // "0"
+                try RFC_5234.Validator.validate([0x30], against: RFC_5234.CoreRules.alpha)
             }
         }
 
         @Test
         func `DIGIT matches 0-9`() throws {
             let result: Result<Void, RFC_5234.Validator.Error> = try (UInt8(0x30)...UInt8(0x39))
-                .reduce(.success(())) { partial, byte in  // 0-9
+                .reduce(.success(())) { partial, byte in
                     guard case .success = partial else { return partial }
                     do throws(RFC_5234.Validator.Error) {
                         try RFC_5234.Validator.validate([byte], against: RFC_5234.CoreRules.digit)
@@ -64,14 +59,14 @@ extension RFC_5234.CoreRules {
         @Test
         func `DIGIT rejects letters`() {
             #expect(throws: RFC_5234.Validator.Error.self) {
-                try RFC_5234.Validator.validate([0x41], against: RFC_5234.CoreRules.digit)  // "A"
+                try RFC_5234.Validator.validate([0x41], against: RFC_5234.CoreRules.digit)
             }
         }
 
         @Test
         func `HEXDIG matches 0-9`() throws {
             let result: Result<Void, RFC_5234.Validator.Error> = try (UInt8(0x30)...UInt8(0x39))
-                .reduce(.success(())) { partial, byte in  // 0-9
+                .reduce(.success(())) { partial, byte in
                     guard case .success = partial else { return partial }
                     do throws(RFC_5234.Validator.Error) {
                         try RFC_5234.Validator.validate([byte], against: RFC_5234.CoreRules.hexdig)
@@ -106,20 +101,20 @@ extension RFC_5234.CoreRules {
         @Test
         func `HEXDIG rejects G`() {
             #expect(throws: RFC_5234.Validator.Error.self) {
-                try RFC_5234.Validator.validate([0x47], against: RFC_5234.CoreRules.hexdig)  // "G"
+                try RFC_5234.Validator.validate([0x47], against: RFC_5234.CoreRules.hexdig)
             }
         }
 
         @Test
         func `BIT matches 0 and 1`() throws {
-            try RFC_5234.Validator.validate([0x30], against: RFC_5234.CoreRules.bit)  // "0"
-            try RFC_5234.Validator.validate([0x31], against: RFC_5234.CoreRules.bit)  // "1"
+            try RFC_5234.Validator.validate([0x30], against: RFC_5234.CoreRules.bit)
+            try RFC_5234.Validator.validate([0x31], against: RFC_5234.CoreRules.bit)
         }
 
         @Test
         func `BIT rejects 2`() {
             #expect(throws: RFC_5234.Validator.Error.self) {
-                try RFC_5234.Validator.validate([0x32], against: RFC_5234.CoreRules.bit)  // "2"
+                try RFC_5234.Validator.validate([0x32], against: RFC_5234.CoreRules.bit)
             }
         }
     }
@@ -187,7 +182,7 @@ extension RFC_5234.CoreRules.Test {
         @Test
         func `WSP rejects other whitespace`() {
             #expect(throws: RFC_5234.Validator.Error.self) {
-                try RFC_5234.Validator.validate([0x0A], against: RFC_5234.CoreRules.wsp)  // LF
+                try RFC_5234.Validator.validate([0x0A], against: RFC_5234.CoreRules.wsp)
             }
         }
     }
@@ -215,10 +210,10 @@ extension RFC_5234.CoreRules.Test {
     struct `Character Ranges` {
         @Test
         func `VCHAR matches visible characters`() throws {
-            // Test first, middle, and last
-            try RFC_5234.Validator.validate([0x21], against: RFC_5234.CoreRules.vchar)  // !
-            try RFC_5234.Validator.validate([0x41], against: RFC_5234.CoreRules.vchar)  // A
-            try RFC_5234.Validator.validate([0x7E], against: RFC_5234.CoreRules.vchar)  // ~
+
+            try RFC_5234.Validator.validate([0x21], against: RFC_5234.CoreRules.vchar)
+            try RFC_5234.Validator.validate([0x41], against: RFC_5234.CoreRules.vchar)
+            try RFC_5234.Validator.validate([0x7E], against: RFC_5234.CoreRules.vchar)
         }
 
         @Test
@@ -241,7 +236,7 @@ extension RFC_5234.CoreRules.Test {
         @Test
         func `CHAR matches 7-bit ASCII (excluding NUL)`() throws {
             try RFC_5234.Validator.validate([0x01], against: RFC_5234.CoreRules.char)
-            try RFC_5234.Validator.validate([0x41], against: RFC_5234.CoreRules.char)  // A
+            try RFC_5234.Validator.validate([0x41], against: RFC_5234.CoreRules.char)
             try RFC_5234.Validator.validate([0x7F], against: RFC_5234.CoreRules.char)
         }
 
@@ -264,19 +259,19 @@ extension RFC_5234.CoreRules.Test {
 
         @Test
         func `CTL matches control characters`() throws {
-            try RFC_5234.Validator.validate([0x00], against: RFC_5234.CoreRules.ctl)  // NUL
-            try RFC_5234.Validator.validate([0x09], against: RFC_5234.CoreRules.ctl)  // TAB
+            try RFC_5234.Validator.validate([0x00], against: RFC_5234.CoreRules.ctl)
+            try RFC_5234.Validator.validate([0x09], against: RFC_5234.CoreRules.ctl)
             try RFC_5234.Validator.validate([0x1F], against: RFC_5234.CoreRules.ctl)
-            try RFC_5234.Validator.validate([0x7F], against: RFC_5234.CoreRules.ctl)  // DEL
+            try RFC_5234.Validator.validate([0x7F], against: RFC_5234.CoreRules.ctl)
         }
 
         @Test
         func `CTL rejects printable characters`() {
             #expect(throws: RFC_5234.Validator.Error.self) {
-                try RFC_5234.Validator.validate([0x20], against: RFC_5234.CoreRules.ctl)  // space
+                try RFC_5234.Validator.validate([0x20], against: RFC_5234.CoreRules.ctl)
             }
             #expect(throws: RFC_5234.Validator.Error.self) {
-                try RFC_5234.Validator.validate([0x41], against: RFC_5234.CoreRules.ctl)  // A
+                try RFC_5234.Validator.validate([0x41], against: RFC_5234.CoreRules.ctl)
             }
         }
 
@@ -310,7 +305,7 @@ extension RFC_5234.CoreRules.Test {
         @Test
         func `Lookup by name works`() throws {
             let digit = RFC_5234.CoreRules.all["DIGIT"]!
-            try RFC_5234.Validator.validate([0x35], against: digit)  // "5"
+            try RFC_5234.Validator.validate([0x35], against: digit)
         }
     }
 }

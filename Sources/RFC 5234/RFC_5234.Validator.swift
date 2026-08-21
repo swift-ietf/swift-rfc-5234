@@ -1,15 +1,10 @@
 extension RFC_5234 {
-    /// Validates input against ABNF rules.
+
     public enum Validator {}
 }
 
 extension RFC_5234.Validator {
-    /// Validates whether the given bytes match the rule.
-    ///
-    /// - Parameters:
-    ///   - bytes: The bytes to validate
-    ///   - rule: The ABNF rule to validate against
-    /// - Throws: `ValidationError` if validation fails
+
     public static func validate(
         _ bytes: [UInt8],
         against rule: RFC_5234.Rule
@@ -34,7 +29,7 @@ extension RFC_5234.Validator {
     ) throws(Error) -> (matched: Bool, consumed: Int) {
         switch element {
         case .terminal(let terminal):
-            // Try to match the terminal at the current position
+
             var length = 1
             while offset + length <= bytes.count {
                 let slice = Array(bytes[offset..<(offset + length)])
@@ -42,7 +37,7 @@ extension RFC_5234.Validator {
                     return (true, length)
                 }
                 length += 1
-                if length > 100 { break }  // Prevent infinite loops
+                if length > 100 { break }
             }
             return (false, 0)
 

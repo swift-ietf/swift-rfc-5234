@@ -1,8 +1,3 @@
-// Element Tests.swift
-// swift-rfc-5234
-//
-// Tests for RFC_5234.Element
-
 import RFC_5234
 import Testing
 
@@ -11,12 +6,12 @@ extension RFC_5234.Element {
     struct Test {
         @Test
         func `Sequence matches concatenated elements`() throws {
-            // "AB" = sequence of "A" then "B"
+
             let rule = RFC_5234.Rule(
                 name: "test",
                 element: .sequence([
-                    .terminal(.byte(0x41)),  // A
-                    .terminal(.byte(0x42)),  // B
+                    .terminal(.byte(0x41)),
+                    .terminal(.byte(0x42)),
                 ])
             )
 
@@ -28,13 +23,13 @@ extension RFC_5234.Element {
             let rule = RFC_5234.Rule(
                 name: "test",
                 element: .sequence([
-                    .terminal(.byte(0x41)),  // A
-                    .terminal(.byte(0x42)),  // B
+                    .terminal(.byte(0x41)),
+                    .terminal(.byte(0x42)),
                 ])
             )
 
             #expect(throws: RFC_5234.Validator.Error.self) {
-                try RFC_5234.Validator.validate([0x41], against: rule)  // Only "A"
+                try RFC_5234.Validator.validate([0x41], against: rule)
             }
         }
 
@@ -43,13 +38,13 @@ extension RFC_5234.Element {
             let rule = RFC_5234.Rule(
                 name: "test",
                 element: .sequence([
-                    .terminal(.byte(0x41)),  // A
-                    .terminal(.byte(0x42)),  // B
+                    .terminal(.byte(0x41)),
+                    .terminal(.byte(0x42)),
                 ])
             )
 
             #expect(throws: RFC_5234.Validator.Error.self) {
-                try RFC_5234.Validator.validate([0x42, 0x41], against: rule)  // "BA"
+                try RFC_5234.Validator.validate([0x42, 0x41], against: rule)
             }
         }
 
@@ -70,12 +65,12 @@ extension RFC_5234.Element.Test {
     struct Alternation {
         @Test
         func `Alternation matches first option`() throws {
-            // "A" / "B"
+
             let rule = RFC_5234.Rule(
                 name: "test",
                 element: .alternation([
-                    .terminal(.byte(0x41)),  // A
-                    .terminal(.byte(0x42)),  // B
+                    .terminal(.byte(0x41)),
+                    .terminal(.byte(0x42)),
                 ])
             )
 
@@ -87,8 +82,8 @@ extension RFC_5234.Element.Test {
             let rule = RFC_5234.Rule(
                 name: "test",
                 element: .alternation([
-                    .terminal(.byte(0x41)),  // A
-                    .terminal(.byte(0x42)),  // B
+                    .terminal(.byte(0x41)),
+                    .terminal(.byte(0x42)),
                 ])
             )
 
@@ -100,32 +95,32 @@ extension RFC_5234.Element.Test {
             let rule = RFC_5234.Rule(
                 name: "test",
                 element: .alternation([
-                    .terminal(.byte(0x41)),  // A
-                    .terminal(.byte(0x42)),  // B
+                    .terminal(.byte(0x41)),
+                    .terminal(.byte(0x42)),
                 ])
             )
 
             #expect(throws: RFC_5234.Validator.Error.self) {
-                try RFC_5234.Validator.validate([0x43], against: rule)  // C
+                try RFC_5234.Validator.validate([0x43], against: rule)
             }
         }
 
         @Test
         func `Alternation with many options`() throws {
-            // Test HEXDIG-like: 0-9 / A-F
+
             let rule = RFC_5234.Rule(
                 name: "test",
                 element: .alternation([
-                    .terminal(.byteRange(0x30, 0x39)),  // 0-9
+                    .terminal(.byteRange(0x30, 0x39)),
                     .terminal(.string("A")),
                     .terminal(.string("B")),
                     .terminal(.string("C")),
                 ])
             )
 
-            try RFC_5234.Validator.validate([0x35], against: rule)  // 5
-            try RFC_5234.Validator.validate([0x41], against: rule)  // A
-            try RFC_5234.Validator.validate([0x43], against: rule)  // C
+            try RFC_5234.Validator.validate([0x35], against: rule)
+            try RFC_5234.Validator.validate([0x41], against: rule)
+            try RFC_5234.Validator.validate([0x43], against: rule)
         }
     }
 }
@@ -135,10 +130,10 @@ extension RFC_5234.Element.Test {
     struct Optional {
         @Test
         func `Optional matches when present`() throws {
-            // [A]
+
             let rule = RFC_5234.Rule(
                 name: "test",
-                element: .optional(.terminal(.byte(0x41)))  // [A]
+                element: .optional(.terminal(.byte(0x41)))
             )
 
             try RFC_5234.Validator.validate([0x41], against: rule)
@@ -148,7 +143,7 @@ extension RFC_5234.Element.Test {
         func `Optional matches when absent`() throws {
             let rule = RFC_5234.Rule(
                 name: "test",
-                element: .optional(.terminal(.byte(0x41)))  // [A]
+                element: .optional(.terminal(.byte(0x41)))
             )
 
             try RFC_5234.Validator.validate([], against: rule)
@@ -156,18 +151,18 @@ extension RFC_5234.Element.Test {
 
         @Test
         func `Optional in sequence`() throws {
-            // A [B] C
+
             let rule = RFC_5234.Rule(
                 name: "test",
                 element: .sequence([
-                    .terminal(.byte(0x41)),  // A
-                    .optional(.terminal(.byte(0x42))),  // [B]
-                    .terminal(.byte(0x43)),  // C
+                    .terminal(.byte(0x41)),
+                    .optional(.terminal(.byte(0x42))),
+                    .terminal(.byte(0x43)),
                 ])
             )
 
-            try RFC_5234.Validator.validate([0x41, 0x42, 0x43], against: rule)  // ABC
-            try RFC_5234.Validator.validate([0x41, 0x43], against: rule)  // AC
+            try RFC_5234.Validator.validate([0x41, 0x42, 0x43], against: rule)
+            try RFC_5234.Validator.validate([0x41, 0x43], against: rule)
         }
     }
 }
@@ -177,7 +172,7 @@ extension RFC_5234.Element.Test {
     struct Repetition {
         @Test
         func `Repetition 0 or more (*) matches zero`() throws {
-            // *A
+
             let rule = RFC_5234.Rule(
                 name: "test",
                 element: .repetition(.terminal(.byte(0x41)), min: 0, max: nil)
@@ -193,7 +188,7 @@ extension RFC_5234.Element.Test {
                 element: .repetition(.terminal(.byte(0x41)), min: 0, max: nil)
             )
 
-            try RFC_5234.Validator.validate([0x41], against: rule)  // A
+            try RFC_5234.Validator.validate([0x41], against: rule)
         }
 
         @Test
@@ -203,12 +198,12 @@ extension RFC_5234.Element.Test {
                 element: .repetition(.terminal(.byte(0x41)), min: 0, max: nil)
             )
 
-            try RFC_5234.Validator.validate([0x41, 0x41, 0x41], against: rule)  // AAA
+            try RFC_5234.Validator.validate([0x41, 0x41, 0x41], against: rule)
         }
 
         @Test
         func `Repetition 1 or more (1*) requires at least one`() {
-            // 1*A
+
             let rule = RFC_5234.Rule(
                 name: "test",
                 element: .repetition(.terminal(.byte(0x41)), min: 1, max: nil)
@@ -241,42 +236,42 @@ extension RFC_5234.Element.Test {
 
         @Test
         func `Repetition with max (2*4)`() throws {
-            // 2*4A = 2 to 4 occurrences
+
             let rule = RFC_5234.Rule(
                 name: "test",
                 element: .repetition(.terminal(.byte(0x41)), min: 2, max: 4)
             )
 
             #expect(throws: RFC_5234.Validator.Error.self) {
-                try RFC_5234.Validator.validate([0x41], against: rule)  // Too few
+                try RFC_5234.Validator.validate([0x41], against: rule)
             }
 
-            try RFC_5234.Validator.validate([0x41, 0x41], against: rule)  // 2 ✓
-            try RFC_5234.Validator.validate([0x41, 0x41, 0x41], against: rule)  // 3 ✓
-            try RFC_5234.Validator.validate([0x41, 0x41, 0x41, 0x41], against: rule)  // 4 ✓
+            try RFC_5234.Validator.validate([0x41, 0x41], against: rule)
+            try RFC_5234.Validator.validate([0x41, 0x41, 0x41], against: rule)
+            try RFC_5234.Validator.validate([0x41, 0x41, 0x41, 0x41], against: rule)
 
             #expect(throws: RFC_5234.Validator.Error.self) {
-                // Too many
+
                 try RFC_5234.Validator.validate([0x41, 0x41, 0x41, 0x41, 0x41], against: rule)
             }
         }
 
         @Test
         func `Exact repetition (3A)`() throws {
-            // 3A = exactly 3
+
             let rule = RFC_5234.Rule(
                 name: "test",
                 element: .repetition(.terminal(.byte(0x41)), min: 3, max: 3)
             )
 
             #expect(throws: RFC_5234.Validator.Error.self) {
-                try RFC_5234.Validator.validate([0x41, 0x41], against: rule)  // Too few
+                try RFC_5234.Validator.validate([0x41, 0x41], against: rule)
             }
 
-            try RFC_5234.Validator.validate([0x41, 0x41, 0x41], against: rule)  // Exact ✓
+            try RFC_5234.Validator.validate([0x41, 0x41, 0x41], against: rule)
 
             #expect(throws: RFC_5234.Validator.Error.self) {
-                // Too many
+
                 try RFC_5234.Validator.validate([0x41, 0x41, 0x41, 0x41], against: rule)
             }
         }
@@ -288,50 +283,50 @@ extension RFC_5234.Element.Test {
     struct `Complex Combinations` {
         @Test
         func `Sequence of alternations`() throws {
-            // (A / B) (C / D)
+
             let rule = RFC_5234.Rule(
                 name: "test",
                 element: .sequence([
                     .alternation([
-                        .terminal(.byte(0x41)),  // A
-                        .terminal(.byte(0x42)),  // B
+                        .terminal(.byte(0x41)),
+                        .terminal(.byte(0x42)),
                     ]),
                     .alternation([
-                        .terminal(.byte(0x43)),  // C
-                        .terminal(.byte(0x44)),  // D
+                        .terminal(.byte(0x43)),
+                        .terminal(.byte(0x44)),
                     ]),
                 ])
             )
 
-            try RFC_5234.Validator.validate([0x41, 0x43], against: rule)  // AC
-            try RFC_5234.Validator.validate([0x41, 0x44], against: rule)  // AD
-            try RFC_5234.Validator.validate([0x42, 0x43], against: rule)  // BC
-            try RFC_5234.Validator.validate([0x42, 0x44], against: rule)  // BD
+            try RFC_5234.Validator.validate([0x41, 0x43], against: rule)
+            try RFC_5234.Validator.validate([0x41, 0x44], against: rule)
+            try RFC_5234.Validator.validate([0x42, 0x43], against: rule)
+            try RFC_5234.Validator.validate([0x42, 0x44], against: rule)
         }
 
         @Test
         func `Repetition of sequence`() throws {
-            // *(AB)
+
             let rule = RFC_5234.Rule(
                 name: "test",
                 element: .repetition(
                     .sequence([
-                        .terminal(.byte(0x41)),  // A
-                        .terminal(.byte(0x42)),  // B
+                        .terminal(.byte(0x41)),
+                        .terminal(.byte(0x42)),
                     ]),
                     min: 0,
                     max: nil
                 )
             )
 
-            try RFC_5234.Validator.validate([], against: rule)  // empty
-            try RFC_5234.Validator.validate([0x41, 0x42], against: rule)  // AB
-            try RFC_5234.Validator.validate([0x41, 0x42, 0x41, 0x42], against: rule)  // ABAB
+            try RFC_5234.Validator.validate([], against: rule)
+            try RFC_5234.Validator.validate([0x41, 0x42], against: rule)
+            try RFC_5234.Validator.validate([0x41, 0x42, 0x41, 0x42], against: rule)
         }
 
         @Test
         func `Optional repetition`() throws {
-            // [*A]
+
             let rule = RFC_5234.Rule(
                 name: "test",
                 element: .optional(

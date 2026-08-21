@@ -1,12 +1,11 @@
 extension RFC_5234.Validator {
-    /// Errors that can occur during validation.
+
     public enum Error: Swift.Error, Sendable, Equatable {
         case doesNotMatch(String)
         case incompleteMatch(String, consumed: Int, total: Int)
         case unsupportedFeature(String)
     }
 
-    /// Deprecated: Use `Error` instead
     @available(*, deprecated, renamed: "Error")
     public typealias ValidationError = RFC_5234.Validator.Error
 }
