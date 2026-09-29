@@ -36,9 +36,9 @@ extension RFC_5234.Terminal {
                 return bytes == stringBytes
             } else {
                 return zip(bytes, stringBytes).allSatisfy { byte, expected in
-                    let lower = ASCII.Case.Conversion.convert(byte, to: .lower)
+                    let lower = ASCII.Case.Conversion.convert(ASCII.Code(byte), to: .lower)
                     let expectedLower = ASCII.Case.Conversion.convert(
-                        expected,
+                        ASCII.Code(expected),
                         to: .lower
                     )
                     return lower == expectedLower
