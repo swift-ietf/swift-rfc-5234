@@ -1,5 +1,5 @@
 import ASCII
-import ASCII_Standard_Library_Integration
+import ASCII
 
 extension RFC_5234 {
 
