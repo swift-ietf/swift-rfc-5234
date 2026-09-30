@@ -78,6 +78,7 @@ extension RFC_5234.Validator {
                     at: offset + totalConsumed
                 )
                 if !matched { break }
+                if consumed == 0 { return (true, totalConsumed) }
                 count += 1
                 totalConsumed += consumed
                 if offset + totalConsumed >= bytes.count { break }
