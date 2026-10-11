@@ -9,9 +9,20 @@ extension RFC_5234.Validator {
         _ bytes: [UInt8],
         against rule: RFC_5234.Rule
     ) throws(Error) {
+        try validate(bytes, against: rule, in: [])
+    }
+
+    public static func validate(
+        _ bytes: [UInt8],
+        against rule: RFC_5234.Rule,
+        in grammar: [RFC_5234.Rule]
+    ) throws(Error) {
         var rules: [String: RFC_5234.Rule] = [:]
         for core in RFC_5234.CoreRules.all.values {
             rules[core.name.lowercased()] = core
+        }
+        for defined in grammar {
+            rules[defined.name.lowercased()] = defined
         }
         rules[rule.name.lowercased()] = rule
         var expanding: Set<Expansion> = [Expansion(name: rule.name.lowercased(), offset: 0)]
