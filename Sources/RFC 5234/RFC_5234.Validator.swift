@@ -25,15 +25,13 @@ extension RFC_5234.Validator {
             rules[defined.name.lowercased()] = defined
         }
         rules[rule.name.lowercased()] = rule
-        var expanding: Set<Expansion> = [Expansion(name: rule.name.lowercased(), offset: 0)]
-        let (matched, consumed) = try matchElement(
-            rule.element,
-            in: bytes,
-            at: 0,
+        var matcher = Matcher(
+            bytes: bytes,
             rules: rules,
-            expanding: &expanding
+            expanding: [Expansion(name: rule.name.lowercased(), offset: 0)]
         )
-        guard matched else {
+        let ends = try matcher.ends(of: rule.element, from: 0)
+        guard let consumed = ends.max() else {
             throw Error.doesNotMatch(rule.name)
         }
         guard consumed == bytes.count else {
@@ -44,111 +42,98 @@ extension RFC_5234.Validator {
             )
         }
     }
-
-    private static func matchElement(
-        _ element: RFC_5234.Element,
-        in bytes: [UInt8],
-        at offset: Int,
-        rules: [String: RFC_5234.Rule],
-        expanding: inout Set<Expansion>
-    ) throws(Error) -> (matched: Bool, consumed: Int) {
-        switch element {
-        case .terminal(let terminal):
-
-            var length = 1
-            while offset + length <= bytes.count {
-                let slice = Array(bytes[offset..<(offset + length)])
-                if terminal.matches(slice) {
-                    return (true, length)
-                }
-                length += 1
-                if length > 100 { break }
-            }
-            return (false, 0)
-
-        case .sequence(let elements):
-            var totalConsumed = 0
-            for elem in elements {
-                let (matched, consumed) = try matchElement(
-                    elem,
-                    in: bytes,
-                    at: offset + totalConsumed,
-                    rules: rules,
-                    expanding: &expanding
-                )
-                guard matched else { return (false, 0) }
-                totalConsumed += consumed
-            }
-            return (true, totalConsumed)
-
-        case .alternation(let elements):
-            for elem in elements {
-                let (matched, consumed) = try matchElement(
-                    elem,
-                    in: bytes,
-                    at: offset,
-                    rules: rules,
-                    expanding: &expanding
-                )
-                if matched {
-                    return (true, consumed)
-                }
-            }
-            return (false, 0)
-
-        case .optional(let elem):
-            let (matched, consumed) = try matchElement(
-                    elem,
-                    in: bytes,
-                    at: offset,
-                    rules: rules,
-                    expanding: &expanding
-                )
-            return (true, matched ? consumed : 0)
-
-        case .repetition(let elem, let min, let max):
-            var count = 0
-            var totalConsumed = 0
-            while true {
-                if let max, count >= max { break }
-                let (matched, consumed) = try matchElement(
-                    elem,
-                    in: bytes,
-                    at: offset + totalConsumed,
-                    rules: rules,
-                    expanding: &expanding
-                )
-                if !matched { break }
-                if consumed == 0 { return (true, totalConsumed) }
-                count += 1
-                totalConsumed += consumed
-                if offset + totalConsumed >= bytes.count { break }
-            }
-            return (count >= min, totalConsumed)
-
-        case .ruleReference(let name):
-            guard let referenced = rules[name.lowercased()] else {
-                throw Error.unsupportedFeature("Undefined rule '\(name)'")
-            }
-            let expansion = Expansion(name: referenced.name.lowercased(), offset: offset)
-            guard expanding.insert(expansion).inserted else {
-                throw Error.unsupportedFeature("Left recursion in rule '\(referenced.name)'")
-            }
-            defer { expanding.remove(expansion) }
-            return try matchElement(
-                referenced.element,
-                in: bytes,
-                at: offset,
-                rules: rules,
-                expanding: &expanding
-            )
-        }
-    }
 }
 
 extension RFC_5234.Validator {
     private struct Expansion: Hashable {
         let name: String
         let offset: Int
+    }
+
+    private struct Matcher {
+        let bytes: [UInt8]
+        let rules: [String: RFC_5234.Rule]
+        var expanding: Set<Expansion>
+        var memo: [Expansion: Set<Int>] = [:]
+
+        mutating func ends(
+            of element: RFC_5234.Element,
+            from offset: Int
+        ) throws(Error) -> Set<Int> {
+            switch element {
+            case .terminal(let terminal):
+                let length: Int
+                switch terminal.matcher {
+                case .string(let string, _):
+                    length = string.utf8.count
+                case .byteValue, .byteRange:
+                    length = 1
+                }
+                guard offset + length <= bytes.count,
+                    terminal.matches(Array(bytes[offset..<(offset + length)]))
+                else { return [] }
+                return [offset + length]
+
+            case .sequence(let elements):
+                var positions: Set<Int> = [offset]
+                for element in elements {
+                    var next: Set<Int> = []
+                    for position in positions {
+                        next.formUnion(try ends(of: element, from: position))
+                    }
+                    guard !next.isEmpty else { return [] }
+                    positions = next
+                }
+                return positions
+
+            case .alternation(let elements):
+                var positions: Set<Int> = []
+                for element in elements {
+                    positions.formUnion(try ends(of: element, from: offset))
+                }
+                return positions
+
+            case .optional(let element):
+                return try ends(of: element, from: offset).union([offset])
+
+            case .repetition(let element, let min, let max):
+                if let max, max < min { return [] }
+                var found: Set<Int> = min == 0 ? [offset] : []
+                var frontier: Set<Int> = [offset]
+                var count = 0
+                while !frontier.isEmpty {
+                    if let max, count >= max { break }
+                    var next: Set<Int> = []
+                    for position in frontier {
+                        next.formUnion(try ends(of: element, from: position))
+                    }
+                    count += 1
+                    if next == frontier {
+                        found.formUnion(next)
+                        break
+                    }
+                    if count >= min {
+                        if max == nil { next.subtract(found) }
+                        found.formUnion(next)
+                    }
+                    frontier = next
+                }
+                return found
+
+            case .ruleReference(let name):
+                guard let referenced = rules[name.lowercased()] else {
+                    throw Error.unsupportedFeature("Undefined rule '\(name)'")
+                }
+                let expansion = Expansion(name: referenced.name.lowercased(), offset: offset)
+                if let cached = memo[expansion] { return cached }
+                guard expanding.insert(expansion).inserted else {
+                    throw Error.unsupportedFeature("Left recursion in rule '\(referenced.name)'")
+                }
+                defer { expanding.remove(expansion) }
+                let positions = try ends(of: referenced.element, from: offset)
+                memo[expansion] = positions
+                return positions
+            }
+        }
     }
 }
