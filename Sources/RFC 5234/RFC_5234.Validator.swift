@@ -9,7 +9,19 @@ extension RFC_5234.Validator {
         _ bytes: [UInt8],
         against rule: RFC_5234.Rule
     ) throws(Error) {
-        let (matched, consumed) = try matchElement(rule.element, in: bytes, at: 0)
+        var rules: [String: RFC_5234.Rule] = [:]
+        for core in RFC_5234.CoreRules.all.values {
+            rules[core.name.lowercased()] = core
+        }
+        rules[rule.name.lowercased()] = rule
+        var expanding: Set<Expansion> = [Expansion(name: rule.name.lowercased(), offset: 0)]
+        let (matched, consumed) = try matchElement(
+            rule.element,
+            in: bytes,
+            at: 0,
+            rules: rules,
+            expanding: &expanding
+        )
         guard matched else {
             throw Error.doesNotMatch(rule.name)
         }
@@ -25,7 +37,9 @@ extension RFC_5234.Validator {
     private static func matchElement(
         _ element: RFC_5234.Element,
         in bytes: [UInt8],
-        at offset: Int
+        at offset: Int,
+        rules: [String: RFC_5234.Rule],
+        expanding: inout Set<Expansion>
     ) throws(Error) -> (matched: Bool, consumed: Int) {
         switch element {
         case .terminal(let terminal):
@@ -47,7 +61,9 @@ extension RFC_5234.Validator {
                 let (matched, consumed) = try matchElement(
                     elem,
                     in: bytes,
-                    at: offset + totalConsumed
+                    at: offset + totalConsumed,
+                    rules: rules,
+                    expanding: &expanding
                 )
                 guard matched else { return (false, 0) }
                 totalConsumed += consumed
@@ -56,7 +72,13 @@ extension RFC_5234.Validator {
 
         case .alternation(let elements):
             for elem in elements {
-                let (matched, consumed) = try matchElement(elem, in: bytes, at: offset)
+                let (matched, consumed) = try matchElement(
+                    elem,
+                    in: bytes,
+                    at: offset,
+                    rules: rules,
+                    expanding: &expanding
+                )
                 if matched {
                     return (true, consumed)
                 }
@@ -64,7 +86,13 @@ extension RFC_5234.Validator {
             return (false, 0)
 
         case .optional(let elem):
-            let (matched, consumed) = try matchElement(elem, in: bytes, at: offset)
+            let (matched, consumed) = try matchElement(
+                    elem,
+                    in: bytes,
+                    at: offset,
+                    rules: rules,
+                    expanding: &expanding
+                )
             return (true, matched ? consumed : 0)
 
         case .repetition(let elem, let min, let max):
@@ -75,7 +103,9 @@ extension RFC_5234.Validator {
                 let (matched, consumed) = try matchElement(
                     elem,
                     in: bytes,
-                    at: offset + totalConsumed
+                    at: offset + totalConsumed,
+                    rules: rules,
+                    expanding: &expanding
                 )
                 if !matched { break }
                 if consumed == 0 { return (true, totalConsumed) }
@@ -85,8 +115,29 @@ extension RFC_5234.Validator {
             }
             return (count >= min, totalConsumed)
 
-        case .ruleReference:
-            throw Error.unsupportedFeature("Rule references not yet implemented")
+        case .ruleReference(let name):
+            guard let referenced = rules[name.lowercased()] else {
+                throw Error.unsupportedFeature("Undefined rule '\(name)'")
+            }
+            let expansion = Expansion(name: referenced.name.lowercased(), offset: offset)
+            guard expanding.insert(expansion).inserted else {
+                throw Error.unsupportedFeature("Left recursion in rule '\(referenced.name)'")
+            }
+            defer { expanding.remove(expansion) }
+            return try matchElement(
+                referenced.element,
+                in: bytes,
+                at: offset,
+                rules: rules,
+                expanding: &expanding
+            )
         }
+    }
+}
+
+extension RFC_5234.Validator {
+    private struct Expansion: Hashable {
+        let name: String
+        let offset: Int
     }
 }
