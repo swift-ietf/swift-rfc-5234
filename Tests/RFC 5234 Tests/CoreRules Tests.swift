@@ -6,7 +6,7 @@ extension RFC_5234.CoreRules {
     struct Test {
         @Test
         func `ALPHA matches uppercase letters`() throws {
-            let result: Result<Void, RFC_5234.Validator.Error> = try (UInt8(0x41)...UInt8(0x5A))
+            let result: Result<Void, RFC_5234.Validator.Error> = (UInt8(0x41)...UInt8(0x5A))
                 .reduce(.success(())) { partial, byte in
                     guard case .success = partial else { return partial }
                     do throws(RFC_5234.Validator.Error) {
@@ -21,7 +21,7 @@ extension RFC_5234.CoreRules {
 
         @Test
         func `ALPHA matches lowercase letters`() throws {
-            let result: Result<Void, RFC_5234.Validator.Error> = try (UInt8(0x61)...UInt8(0x7A))
+            let result: Result<Void, RFC_5234.Validator.Error> = (UInt8(0x61)...UInt8(0x7A))
                 .reduce(.success(())) { partial, byte in
                     guard case .success = partial else { return partial }
                     do throws(RFC_5234.Validator.Error) {
@@ -43,7 +43,7 @@ extension RFC_5234.CoreRules {
 
         @Test
         func `DIGIT matches 0-9`() throws {
-            let result: Result<Void, RFC_5234.Validator.Error> = try (UInt8(0x30)...UInt8(0x39))
+            let result: Result<Void, RFC_5234.Validator.Error> = (UInt8(0x30)...UInt8(0x39))
                 .reduce(.success(())) { partial, byte in
                     guard case .success = partial else { return partial }
                     do throws(RFC_5234.Validator.Error) {
@@ -65,7 +65,7 @@ extension RFC_5234.CoreRules {
 
         @Test
         func `HEXDIG matches 0-9`() throws {
-            let result: Result<Void, RFC_5234.Validator.Error> = try (UInt8(0x30)...UInt8(0x39))
+            let result: Result<Void, RFC_5234.Validator.Error> = (UInt8(0x30)...UInt8(0x39))
                 .reduce(.success(())) { partial, byte in
                     guard case .success = partial else { return partial }
                     do throws(RFC_5234.Validator.Error) {

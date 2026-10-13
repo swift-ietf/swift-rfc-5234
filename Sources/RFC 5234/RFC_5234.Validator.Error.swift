@@ -1,6 +1,6 @@
 extension RFC_5234.Validator {
 
-    public enum Error: Swift.Error, Sendable, Equatable {
+    public enum Error: Swift::Error, Sendable, Equatable {
         case doesNotMatch(String)
         case incompleteMatch(String, consumed: Int, total: Int)
         case unsupportedFeature(String)
