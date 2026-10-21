@@ -1,5 +1,4 @@
 import ASCII
-import ASCII
 
 extension RFC_5234 {
 
@@ -32,17 +31,16 @@ extension RFC_5234.Terminal {
         case .string(let string, let caseSensitive):
             let stringBytes = Array(string.utf8)
             guard bytes.count == stringBytes.count else { return false }
-            if caseSensitive {
+            guard !caseSensitive else {
                 return bytes == stringBytes
-            } else {
-                return zip(bytes, stringBytes).allSatisfy { byte, expected in
-                    let lower = ASCII.Case.Conversion.convert(ASCII.Code(byte), to: .lower)
-                    let expectedLower = ASCII.Case.Conversion.convert(
-                        ASCII.Code(expected),
-                        to: .lower
-                    )
-                    return lower == expectedLower
-                }
+            }
+            return zip(bytes, stringBytes).allSatisfy { byte, expected in
+                let lower = ASCII.Case.Conversion.convert(ASCII.Code(byte), to: .lower)
+                let expectedLower = ASCII.Case.Conversion.convert(
+                    ASCII.Code(expected),
+                    to: .lower
+                )
+                return lower == expectedLower
             }
 
         case .byteValue(let value):
