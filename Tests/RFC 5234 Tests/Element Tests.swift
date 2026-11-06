@@ -1,7 +1,9 @@
 import RFC_5234
 import Testing
 
-extension RFC_5234.Element {
+enum `RFC_5234.Element Tests` {}
+
+extension `RFC_5234.Element Tests` {
     @Suite("RFC_5234.Element - Sequence")
     struct Test {
         @Test
@@ -60,7 +62,7 @@ extension RFC_5234.Element {
     }
 }
 
-extension RFC_5234.Element.Test {
+extension `RFC_5234.Element Tests`.Test {
     @Suite("RFC_5234.Element - Alternation")
     struct Alternation {
         @Test
@@ -125,7 +127,7 @@ extension RFC_5234.Element.Test {
     }
 }
 
-extension RFC_5234.Element.Test {
+extension `RFC_5234.Element Tests`.Test {
     @Suite("RFC_5234.Element - Optional")
     struct Optional {
         @Test
@@ -167,7 +169,7 @@ extension RFC_5234.Element.Test {
     }
 }
 
-extension RFC_5234.Element.Test {
+extension `RFC_5234.Element Tests`.Test {
     @Suite("RFC_5234.Element - Repetition")
     struct Repetition {
         @Test
@@ -278,7 +280,7 @@ extension RFC_5234.Element.Test {
     }
 }
 
-extension RFC_5234.Element.Test {
+extension `RFC_5234.Element Tests`.Test {
     @Suite
     struct `Complex Combinations` {
         @Test

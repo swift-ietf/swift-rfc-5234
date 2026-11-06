@@ -1,7 +1,9 @@
 import RFC_5234
 import Testing
 
-extension RFC_5234 {
+enum `RFC_5234 Tests` {}
+
+extension `RFC_5234 Tests` {
     @Suite("RFC 5234 Basic Tests")
     struct Test {
         @Suite

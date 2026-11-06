@@ -1,7 +1,9 @@
 import RFC_5234
 import Testing
 
-extension RFC_5234.CoreRules {
+enum `RFC_5234.CoreRules Tests` {}
+
+extension `RFC_5234.CoreRules Tests` {
     @Suite("RFC_5234.CoreRules - Character Classes")
     struct Test {
         @Test
@@ -120,7 +122,7 @@ extension RFC_5234.CoreRules {
     }
 }
 
-extension RFC_5234.CoreRules.Test {
+extension `RFC_5234.CoreRules Tests`.Test {
     @Suite("RFC_5234.CoreRules - Whitespace")
     struct Whitespace {
         @Test
@@ -188,7 +190,7 @@ extension RFC_5234.CoreRules.Test {
     }
 }
 
-extension RFC_5234.CoreRules.Test {
+extension `RFC_5234.CoreRules Tests`.Test {
     @Suite("RFC_5234.CoreRules - Punctuation")
     struct Punctuation {
         @Test
@@ -205,7 +207,7 @@ extension RFC_5234.CoreRules.Test {
     }
 }
 
-extension RFC_5234.CoreRules.Test {
+extension `RFC_5234.CoreRules Tests`.Test {
     @Suite
     struct `Character Ranges` {
         @Test
@@ -285,7 +287,7 @@ extension RFC_5234.CoreRules.Test {
     }
 }
 
-extension RFC_5234.CoreRules.Test {
+extension `RFC_5234.CoreRules Tests`.Test {
     @Suite("RFC_5234.CoreRules - Lookup")
     struct Lookup {
         @Test
