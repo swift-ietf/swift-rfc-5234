@@ -4,7 +4,7 @@ import Testing
 enum `RFC_5234.CoreRules Tests` {}
 
 extension `RFC_5234.CoreRules Tests` {
-    @Suite("RFC_5234.CoreRules - Character Classes")
+    @Suite
     struct Test {
         @Test
         func `ALPHA matches uppercase letters`() throws {
@@ -123,7 +123,7 @@ extension `RFC_5234.CoreRules Tests` {
 }
 
 extension `RFC_5234.CoreRules Tests`.Test {
-    @Suite("RFC_5234.CoreRules - Whitespace")
+    @Suite
     struct Whitespace {
         @Test
         func `SP matches space`() throws {
@@ -191,7 +191,7 @@ extension `RFC_5234.CoreRules Tests`.Test {
 }
 
 extension `RFC_5234.CoreRules Tests`.Test {
-    @Suite("RFC_5234.CoreRules - Punctuation")
+    @Suite
     struct Punctuation {
         @Test
         func `DQUOTE matches double quote`() throws {
@@ -288,7 +288,7 @@ extension `RFC_5234.CoreRules Tests`.Test {
 }
 
 extension `RFC_5234.CoreRules Tests`.Test {
-    @Suite("RFC_5234.CoreRules - Lookup")
+    @Suite
     struct Lookup {
         @Test
         func `All core rules are in lookup dictionary`() {

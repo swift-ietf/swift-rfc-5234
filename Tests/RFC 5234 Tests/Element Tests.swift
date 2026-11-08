@@ -4,7 +4,7 @@ import Testing
 enum `RFC_5234.Element Tests` {}
 
 extension `RFC_5234.Element Tests` {
-    @Suite("RFC_5234.Element - Sequence")
+    @Suite
     struct Test {
         @Test
         func `Sequence matches concatenated elements`() throws {
@@ -63,7 +63,7 @@ extension `RFC_5234.Element Tests` {
 }
 
 extension `RFC_5234.Element Tests`.Test {
-    @Suite("RFC_5234.Element - Alternation")
+    @Suite
     struct Alternation {
         @Test
         func `Alternation matches first option`() throws {
@@ -128,7 +128,7 @@ extension `RFC_5234.Element Tests`.Test {
 }
 
 extension `RFC_5234.Element Tests`.Test {
-    @Suite("RFC_5234.Element - Optional")
+    @Suite
     struct Optional {
         @Test
         func `Optional matches when present`() throws {
@@ -170,7 +170,7 @@ extension `RFC_5234.Element Tests`.Test {
 }
 
 extension `RFC_5234.Element Tests`.Test {
-    @Suite("RFC_5234.Element - Repetition")
+    @Suite
     struct Repetition {
         @Test
         func `Repetition 0 or more (*) matches zero`() throws {
