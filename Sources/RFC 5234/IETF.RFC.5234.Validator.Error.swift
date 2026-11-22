@@ -1,4 +1,4 @@
-extension RFC_5234.Validator {
+extension IETF.RFC.`5234`.Validator {
 
     public enum Error: Swift::Error, Sendable, Equatable {
         case doesNotMatch(String)
@@ -7,10 +7,10 @@ extension RFC_5234.Validator {
     }
 
     @available(*, deprecated, renamed: "Error")
-    public typealias ValidationError = RFC_5234.Validator.Error
+    public typealias ValidationError = IETF.RFC.`5234`.Validator.Error
 }
 
-extension RFC_5234.Validator.Error: CustomStringConvertible {
+extension IETF.RFC.`5234`.Validator.Error: CustomStringConvertible {
     public var description: String {
         switch self {
         case .doesNotMatch(let ruleName):

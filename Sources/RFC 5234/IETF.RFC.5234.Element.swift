@@ -1,4 +1,4 @@
-extension RFC_5234 {
+extension IETF.RFC.`5234` {
 
     public indirect enum Element: Hashable, Sendable, Codable {
 

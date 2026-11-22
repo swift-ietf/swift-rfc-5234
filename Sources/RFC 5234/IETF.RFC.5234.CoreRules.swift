@@ -1,13 +1,13 @@
 import ASCII
 
-extension RFC_5234 {
+extension IETF.RFC.`5234` {
 
     public enum CoreRules {}
 }
 
-extension RFC_5234.CoreRules {
+extension IETF.RFC.`5234`.CoreRules {
 
-    public static let alpha = RFC_5234.Rule(
+    public static let alpha = IETF.RFC.`5234`.Rule(
         name: "ALPHA",
         element: .alternation([
             .terminal(.byteRange(0x41, 0x5A)),
@@ -15,12 +15,12 @@ extension RFC_5234.CoreRules {
         ])
     )
 
-    public static let digit = RFC_5234.Rule(
+    public static let digit = IETF.RFC.`5234`.Rule(
         name: "DIGIT",
         element: .terminal(.byteRange(0x30, 0x39))
     )
 
-    public static let hexdig = RFC_5234.Rule(
+    public static let hexdig = IETF.RFC.`5234`.Rule(
         name: "HEXDIG",
         element: .alternation([
             .terminal(.byteRange(0x30, 0x39)),
@@ -33,7 +33,7 @@ extension RFC_5234.CoreRules {
         ])
     )
 
-    public static let bit = RFC_5234.Rule(
+    public static let bit = IETF.RFC.`5234`.Rule(
         name: "BIT",
         element: .alternation([
             .terminal(.byte(0x30)),
@@ -42,29 +42,29 @@ extension RFC_5234.CoreRules {
     )
 }
 
-extension RFC_5234.CoreRules {
+extension IETF.RFC.`5234`.CoreRules {
 
-    public static let sp = RFC_5234.Rule(
+    public static let sp = IETF.RFC.`5234`.Rule(
         name: "SP",
         element: .terminal(.byte(INCITS_4_1986.SPACE.sp))
     )
 
-    public static let htab = RFC_5234.Rule(
+    public static let htab = IETF.RFC.`5234`.Rule(
         name: "HTAB",
         element: .terminal(.byte(INCITS_4_1986.Character.Control.htab))
     )
 
-    public static let cr = RFC_5234.Rule(
+    public static let cr = IETF.RFC.`5234`.Rule(
         name: "CR",
         element: .terminal(.byte(INCITS_4_1986.Character.Control.cr))
     )
 
-    public static let lf = RFC_5234.Rule(
+    public static let lf = IETF.RFC.`5234`.Rule(
         name: "LF",
         element: .terminal(.byte(INCITS_4_1986.Character.Control.lf))
     )
 
-    public static let crlf = RFC_5234.Rule(
+    public static let crlf = IETF.RFC.`5234`.Rule(
         name: "CRLF",
         element: .sequence([
             .terminal(.byte(INCITS_4_1986.Character.Control.cr)),
@@ -72,7 +72,7 @@ extension RFC_5234.CoreRules {
         ])
     )
 
-    public static let wsp = RFC_5234.Rule(
+    public static let wsp = IETF.RFC.`5234`.Rule(
         name: "WSP",
         element: .alternation([
             .terminal(.byte(INCITS_4_1986.SPACE.sp)),
@@ -81,27 +81,27 @@ extension RFC_5234.CoreRules {
     )
 }
 
-extension RFC_5234.CoreRules {
+extension IETF.RFC.`5234`.CoreRules {
 
-    public static let dquote = RFC_5234.Rule(
+    public static let dquote = IETF.RFC.`5234`.Rule(
         name: "DQUOTE",
         element: .terminal(.byte(INCITS_4_1986.Character.Graphic.quotationMark))
     )
 }
 
-extension RFC_5234.CoreRules {
+extension IETF.RFC.`5234`.CoreRules {
 
-    public static let vchar = RFC_5234.Rule(
+    public static let vchar = IETF.RFC.`5234`.Rule(
         name: "VCHAR",
         element: .terminal(.byteRange(0x21, 0x7E))
     )
 
-    public static let char = RFC_5234.Rule(
+    public static let char = IETF.RFC.`5234`.Rule(
         name: "CHAR",
         element: .terminal(.byteRange(0x01, 0x7F))
     )
 
-    public static let ctl = RFC_5234.Rule(
+    public static let ctl = IETF.RFC.`5234`.Rule(
         name: "CTL",
         element: .alternation([
             .terminal(.byteRange(0x00, 0x1F)),
@@ -109,15 +109,15 @@ extension RFC_5234.CoreRules {
         ])
     )
 
-    public static let octet = RFC_5234.Rule(
+    public static let octet = IETF.RFC.`5234`.Rule(
         name: "OCTET",
         element: .terminal(.byteRange(0x00, 0xFF))
     )
 }
 
-extension RFC_5234.CoreRules {
+extension IETF.RFC.`5234`.CoreRules {
 
-    public static let all: [String: RFC_5234.Rule] = [
+    public static let all: [String: IETF.RFC.`5234`.Rule] = [
         "ALPHA": alpha,
         "DIGIT": digit,
         "HEXDIG": hexdig,

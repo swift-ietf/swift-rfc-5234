@@ -1,18 +1,18 @@
 import RFC_5234
 import Testing
 
-enum `RFC_5234.CoreRules Tests` {}
+enum `IETF.RFC.5234.CoreRules Tests` {}
 
-extension `RFC_5234.CoreRules Tests` {
+extension `IETF.RFC.5234.CoreRules Tests` {
     @Suite
     struct Test {
         @Test
         func `ALPHA matches uppercase letters`() throws {
-            let result: Result<Void, RFC_5234.Validator.Error> = (UInt8(0x41)...UInt8(0x5A))
+            let result: Result<Void, IETF.RFC.`5234`.Validator.Error> = (UInt8(0x41)...UInt8(0x5A))
                 .reduce(.success(())) { partial, byte in
                     guard case .success = partial else { return partial }
-                    do throws(RFC_5234.Validator.Error) {
-                        try RFC_5234.Validator.validate([byte], against: RFC_5234.CoreRules.alpha)
+                    do throws(IETF.RFC.`5234`.Validator.Error) {
+                        try IETF.RFC.`5234`.Validator.validate([byte], against: IETF.RFC.`5234`.CoreRules.alpha)
                         return .success(())
                     } catch {
                         return .failure(error)
@@ -23,11 +23,11 @@ extension `RFC_5234.CoreRules Tests` {
 
         @Test
         func `ALPHA matches lowercase letters`() throws {
-            let result: Result<Void, RFC_5234.Validator.Error> = (UInt8(0x61)...UInt8(0x7A))
+            let result: Result<Void, IETF.RFC.`5234`.Validator.Error> = (UInt8(0x61)...UInt8(0x7A))
                 .reduce(.success(())) { partial, byte in
                     guard case .success = partial else { return partial }
-                    do throws(RFC_5234.Validator.Error) {
-                        try RFC_5234.Validator.validate([byte], against: RFC_5234.CoreRules.alpha)
+                    do throws(IETF.RFC.`5234`.Validator.Error) {
+                        try IETF.RFC.`5234`.Validator.validate([byte], against: IETF.RFC.`5234`.CoreRules.alpha)
                         return .success(())
                     } catch {
                         return .failure(error)
@@ -38,18 +38,18 @@ extension `RFC_5234.CoreRules Tests` {
 
         @Test
         func `ALPHA rejects digits`() {
-            #expect(throws: RFC_5234.Validator.Error.self) {
-                try RFC_5234.Validator.validate([0x30], against: RFC_5234.CoreRules.alpha)
+            #expect(throws: IETF.RFC.`5234`.Validator.Error.self) {
+                try IETF.RFC.`5234`.Validator.validate([0x30], against: IETF.RFC.`5234`.CoreRules.alpha)
             }
         }
 
         @Test
         func `DIGIT matches 0-9`() throws {
-            let result: Result<Void, RFC_5234.Validator.Error> = (UInt8(0x30)...UInt8(0x39))
+            let result: Result<Void, IETF.RFC.`5234`.Validator.Error> = (UInt8(0x30)...UInt8(0x39))
                 .reduce(.success(())) { partial, byte in
                     guard case .success = partial else { return partial }
-                    do throws(RFC_5234.Validator.Error) {
-                        try RFC_5234.Validator.validate([byte], against: RFC_5234.CoreRules.digit)
+                    do throws(IETF.RFC.`5234`.Validator.Error) {
+                        try IETF.RFC.`5234`.Validator.validate([byte], against: IETF.RFC.`5234`.CoreRules.digit)
                         return .success(())
                     } catch {
                         return .failure(error)
@@ -60,18 +60,18 @@ extension `RFC_5234.CoreRules Tests` {
 
         @Test
         func `DIGIT rejects letters`() {
-            #expect(throws: RFC_5234.Validator.Error.self) {
-                try RFC_5234.Validator.validate([0x41], against: RFC_5234.CoreRules.digit)
+            #expect(throws: IETF.RFC.`5234`.Validator.Error.self) {
+                try IETF.RFC.`5234`.Validator.validate([0x41], against: IETF.RFC.`5234`.CoreRules.digit)
             }
         }
 
         @Test
         func `HEXDIG matches 0-9`() throws {
-            let result: Result<Void, RFC_5234.Validator.Error> = (UInt8(0x30)...UInt8(0x39))
+            let result: Result<Void, IETF.RFC.`5234`.Validator.Error> = (UInt8(0x30)...UInt8(0x39))
                 .reduce(.success(())) { partial, byte in
                     guard case .success = partial else { return partial }
-                    do throws(RFC_5234.Validator.Error) {
-                        try RFC_5234.Validator.validate([byte], against: RFC_5234.CoreRules.hexdig)
+                    do throws(IETF.RFC.`5234`.Validator.Error) {
+                        try IETF.RFC.`5234`.Validator.validate([byte], against: IETF.RFC.`5234`.CoreRules.hexdig)
                         return .success(())
                     } catch {
                         return .failure(error)
@@ -83,9 +83,9 @@ extension `RFC_5234.CoreRules Tests` {
         @Test
         func `HEXDIG matches A-F (uppercase)`() throws {
             for char in ["A", "B", "C", "D", "E", "F"] {
-                try RFC_5234.Validator.validate(
+                try IETF.RFC.`5234`.Validator.validate(
                     Array(char.utf8),
-                    against: RFC_5234.CoreRules.hexdig
+                    against: IETF.RFC.`5234`.CoreRules.hexdig
                 )
             }
         }
@@ -93,201 +93,201 @@ extension `RFC_5234.CoreRules Tests` {
         @Test
         func `HEXDIG matches a-f (lowercase, case-insensitive)`() throws {
             for char in ["a", "b", "c", "d", "e", "f"] {
-                try RFC_5234.Validator.validate(
+                try IETF.RFC.`5234`.Validator.validate(
                     Array(char.utf8),
-                    against: RFC_5234.CoreRules.hexdig
+                    against: IETF.RFC.`5234`.CoreRules.hexdig
                 )
             }
         }
 
         @Test
         func `HEXDIG rejects G`() {
-            #expect(throws: RFC_5234.Validator.Error.self) {
-                try RFC_5234.Validator.validate([0x47], against: RFC_5234.CoreRules.hexdig)
+            #expect(throws: IETF.RFC.`5234`.Validator.Error.self) {
+                try IETF.RFC.`5234`.Validator.validate([0x47], against: IETF.RFC.`5234`.CoreRules.hexdig)
             }
         }
 
         @Test
         func `BIT matches 0 and 1`() throws {
-            try RFC_5234.Validator.validate([0x30], against: RFC_5234.CoreRules.bit)
-            try RFC_5234.Validator.validate([0x31], against: RFC_5234.CoreRules.bit)
+            try IETF.RFC.`5234`.Validator.validate([0x30], against: IETF.RFC.`5234`.CoreRules.bit)
+            try IETF.RFC.`5234`.Validator.validate([0x31], against: IETF.RFC.`5234`.CoreRules.bit)
         }
 
         @Test
         func `BIT rejects 2`() {
-            #expect(throws: RFC_5234.Validator.Error.self) {
-                try RFC_5234.Validator.validate([0x32], against: RFC_5234.CoreRules.bit)
+            #expect(throws: IETF.RFC.`5234`.Validator.Error.self) {
+                try IETF.RFC.`5234`.Validator.validate([0x32], against: IETF.RFC.`5234`.CoreRules.bit)
             }
         }
     }
 }
 
-extension `RFC_5234.CoreRules Tests`.Test {
+extension `IETF.RFC.5234.CoreRules Tests`.Test {
     @Suite
     struct Whitespace {
         @Test
         func `SP matches space`() throws {
-            try RFC_5234.Validator.validate([0x20], against: RFC_5234.CoreRules.sp)
+            try IETF.RFC.`5234`.Validator.validate([0x20], against: IETF.RFC.`5234`.CoreRules.sp)
         }
 
         @Test
         func `SP rejects tab`() {
-            #expect(throws: RFC_5234.Validator.Error.self) {
-                try RFC_5234.Validator.validate([0x09], against: RFC_5234.CoreRules.sp)
+            #expect(throws: IETF.RFC.`5234`.Validator.Error.self) {
+                try IETF.RFC.`5234`.Validator.validate([0x09], against: IETF.RFC.`5234`.CoreRules.sp)
             }
         }
 
         @Test
         func `HTAB matches tab`() throws {
-            try RFC_5234.Validator.validate([0x09], against: RFC_5234.CoreRules.htab)
+            try IETF.RFC.`5234`.Validator.validate([0x09], against: IETF.RFC.`5234`.CoreRules.htab)
         }
 
         @Test
         func `CR matches carriage return`() throws {
-            try RFC_5234.Validator.validate([0x0D], against: RFC_5234.CoreRules.cr)
+            try IETF.RFC.`5234`.Validator.validate([0x0D], against: IETF.RFC.`5234`.CoreRules.cr)
         }
 
         @Test
         func `LF matches linefeed`() throws {
-            try RFC_5234.Validator.validate([0x0A], against: RFC_5234.CoreRules.lf)
+            try IETF.RFC.`5234`.Validator.validate([0x0A], against: IETF.RFC.`5234`.CoreRules.lf)
         }
 
         @Test
         func `CRLF matches CR LF sequence`() throws {
-            try RFC_5234.Validator.validate([0x0D, 0x0A], against: RFC_5234.CoreRules.crlf)
+            try IETF.RFC.`5234`.Validator.validate([0x0D, 0x0A], against: IETF.RFC.`5234`.CoreRules.crlf)
         }
 
         @Test
         func `CRLF rejects just CR`() {
-            #expect(throws: RFC_5234.Validator.Error.self) {
-                try RFC_5234.Validator.validate([0x0D], against: RFC_5234.CoreRules.crlf)
+            #expect(throws: IETF.RFC.`5234`.Validator.Error.self) {
+                try IETF.RFC.`5234`.Validator.validate([0x0D], against: IETF.RFC.`5234`.CoreRules.crlf)
             }
         }
 
         @Test
         func `CRLF rejects just LF`() {
-            #expect(throws: RFC_5234.Validator.Error.self) {
-                try RFC_5234.Validator.validate([0x0A], against: RFC_5234.CoreRules.crlf)
+            #expect(throws: IETF.RFC.`5234`.Validator.Error.self) {
+                try IETF.RFC.`5234`.Validator.validate([0x0A], against: IETF.RFC.`5234`.CoreRules.crlf)
             }
         }
 
         @Test
         func `WSP matches space`() throws {
-            try RFC_5234.Validator.validate([0x20], against: RFC_5234.CoreRules.wsp)
+            try IETF.RFC.`5234`.Validator.validate([0x20], against: IETF.RFC.`5234`.CoreRules.wsp)
         }
 
         @Test
         func `WSP matches tab`() throws {
-            try RFC_5234.Validator.validate([0x09], against: RFC_5234.CoreRules.wsp)
+            try IETF.RFC.`5234`.Validator.validate([0x09], against: IETF.RFC.`5234`.CoreRules.wsp)
         }
 
         @Test
         func `WSP rejects other whitespace`() {
-            #expect(throws: RFC_5234.Validator.Error.self) {
-                try RFC_5234.Validator.validate([0x0A], against: RFC_5234.CoreRules.wsp)
+            #expect(throws: IETF.RFC.`5234`.Validator.Error.self) {
+                try IETF.RFC.`5234`.Validator.validate([0x0A], against: IETF.RFC.`5234`.CoreRules.wsp)
             }
         }
     }
 }
 
-extension `RFC_5234.CoreRules Tests`.Test {
+extension `IETF.RFC.5234.CoreRules Tests`.Test {
     @Suite
     struct Punctuation {
         @Test
         func `DQUOTE matches double quote`() throws {
-            try RFC_5234.Validator.validate([0x22], against: RFC_5234.CoreRules.dquote)
+            try IETF.RFC.`5234`.Validator.validate([0x22], against: IETF.RFC.`5234`.CoreRules.dquote)
         }
 
         @Test
         func `DQUOTE rejects single quote`() {
-            #expect(throws: RFC_5234.Validator.Error.self) {
-                try RFC_5234.Validator.validate([0x27], against: RFC_5234.CoreRules.dquote)
+            #expect(throws: IETF.RFC.`5234`.Validator.Error.self) {
+                try IETF.RFC.`5234`.Validator.validate([0x27], against: IETF.RFC.`5234`.CoreRules.dquote)
             }
         }
     }
 }
 
-extension `RFC_5234.CoreRules Tests`.Test {
+extension `IETF.RFC.5234.CoreRules Tests`.Test {
     @Suite
     struct `Character Ranges` {
         @Test
         func `VCHAR matches visible characters`() throws {
 
-            try RFC_5234.Validator.validate([0x21], against: RFC_5234.CoreRules.vchar)
-            try RFC_5234.Validator.validate([0x41], against: RFC_5234.CoreRules.vchar)
-            try RFC_5234.Validator.validate([0x7E], against: RFC_5234.CoreRules.vchar)
+            try IETF.RFC.`5234`.Validator.validate([0x21], against: IETF.RFC.`5234`.CoreRules.vchar)
+            try IETF.RFC.`5234`.Validator.validate([0x41], against: IETF.RFC.`5234`.CoreRules.vchar)
+            try IETF.RFC.`5234`.Validator.validate([0x7E], against: IETF.RFC.`5234`.CoreRules.vchar)
         }
 
         @Test
         func `VCHAR rejects space`() {
-            #expect(throws: RFC_5234.Validator.Error.self) {
-                try RFC_5234.Validator.validate([0x20], against: RFC_5234.CoreRules.vchar)
+            #expect(throws: IETF.RFC.`5234`.Validator.Error.self) {
+                try IETF.RFC.`5234`.Validator.validate([0x20], against: IETF.RFC.`5234`.CoreRules.vchar)
             }
         }
 
         @Test
         func `VCHAR rejects control characters`() {
-            #expect(throws: RFC_5234.Validator.Error.self) {
-                try RFC_5234.Validator.validate([0x00], against: RFC_5234.CoreRules.vchar)
+            #expect(throws: IETF.RFC.`5234`.Validator.Error.self) {
+                try IETF.RFC.`5234`.Validator.validate([0x00], against: IETF.RFC.`5234`.CoreRules.vchar)
             }
-            #expect(throws: RFC_5234.Validator.Error.self) {
-                try RFC_5234.Validator.validate([0x1F], against: RFC_5234.CoreRules.vchar)
+            #expect(throws: IETF.RFC.`5234`.Validator.Error.self) {
+                try IETF.RFC.`5234`.Validator.validate([0x1F], against: IETF.RFC.`5234`.CoreRules.vchar)
             }
         }
 
         @Test
         func `CHAR matches 7-bit ASCII (excluding NUL)`() throws {
-            try RFC_5234.Validator.validate([0x01], against: RFC_5234.CoreRules.char)
-            try RFC_5234.Validator.validate([0x41], against: RFC_5234.CoreRules.char)
-            try RFC_5234.Validator.validate([0x7F], against: RFC_5234.CoreRules.char)
+            try IETF.RFC.`5234`.Validator.validate([0x01], against: IETF.RFC.`5234`.CoreRules.char)
+            try IETF.RFC.`5234`.Validator.validate([0x41], against: IETF.RFC.`5234`.CoreRules.char)
+            try IETF.RFC.`5234`.Validator.validate([0x7F], against: IETF.RFC.`5234`.CoreRules.char)
         }
 
         @Test
         func `CHAR rejects NUL`() {
-            #expect(throws: RFC_5234.Validator.Error.self) {
-                try RFC_5234.Validator.validate([0x00], against: RFC_5234.CoreRules.char)
+            #expect(throws: IETF.RFC.`5234`.Validator.Error.self) {
+                try IETF.RFC.`5234`.Validator.validate([0x00], against: IETF.RFC.`5234`.CoreRules.char)
             }
         }
 
         @Test
         func `CHAR rejects 8-bit values`() {
-            #expect(throws: RFC_5234.Validator.Error.self) {
-                try RFC_5234.Validator.validate([0x80], against: RFC_5234.CoreRules.char)
+            #expect(throws: IETF.RFC.`5234`.Validator.Error.self) {
+                try IETF.RFC.`5234`.Validator.validate([0x80], against: IETF.RFC.`5234`.CoreRules.char)
             }
-            #expect(throws: RFC_5234.Validator.Error.self) {
-                try RFC_5234.Validator.validate([0xFF], against: RFC_5234.CoreRules.char)
+            #expect(throws: IETF.RFC.`5234`.Validator.Error.self) {
+                try IETF.RFC.`5234`.Validator.validate([0xFF], against: IETF.RFC.`5234`.CoreRules.char)
             }
         }
 
         @Test
         func `CTL matches control characters`() throws {
-            try RFC_5234.Validator.validate([0x00], against: RFC_5234.CoreRules.ctl)
-            try RFC_5234.Validator.validate([0x09], against: RFC_5234.CoreRules.ctl)
-            try RFC_5234.Validator.validate([0x1F], against: RFC_5234.CoreRules.ctl)
-            try RFC_5234.Validator.validate([0x7F], against: RFC_5234.CoreRules.ctl)
+            try IETF.RFC.`5234`.Validator.validate([0x00], against: IETF.RFC.`5234`.CoreRules.ctl)
+            try IETF.RFC.`5234`.Validator.validate([0x09], against: IETF.RFC.`5234`.CoreRules.ctl)
+            try IETF.RFC.`5234`.Validator.validate([0x1F], against: IETF.RFC.`5234`.CoreRules.ctl)
+            try IETF.RFC.`5234`.Validator.validate([0x7F], against: IETF.RFC.`5234`.CoreRules.ctl)
         }
 
         @Test
         func `CTL rejects printable characters`() {
-            #expect(throws: RFC_5234.Validator.Error.self) {
-                try RFC_5234.Validator.validate([0x20], against: RFC_5234.CoreRules.ctl)
+            #expect(throws: IETF.RFC.`5234`.Validator.Error.self) {
+                try IETF.RFC.`5234`.Validator.validate([0x20], against: IETF.RFC.`5234`.CoreRules.ctl)
             }
-            #expect(throws: RFC_5234.Validator.Error.self) {
-                try RFC_5234.Validator.validate([0x41], against: RFC_5234.CoreRules.ctl)
+            #expect(throws: IETF.RFC.`5234`.Validator.Error.self) {
+                try IETF.RFC.`5234`.Validator.validate([0x41], against: IETF.RFC.`5234`.CoreRules.ctl)
             }
         }
 
         @Test
         func `OCTET matches all byte values`() throws {
-            try RFC_5234.Validator.validate([0x00], against: RFC_5234.CoreRules.octet)
-            try RFC_5234.Validator.validate([0x7F], against: RFC_5234.CoreRules.octet)
-            try RFC_5234.Validator.validate([0x80], against: RFC_5234.CoreRules.octet)
-            try RFC_5234.Validator.validate([0xFF], against: RFC_5234.CoreRules.octet)
+            try IETF.RFC.`5234`.Validator.validate([0x00], against: IETF.RFC.`5234`.CoreRules.octet)
+            try IETF.RFC.`5234`.Validator.validate([0x7F], against: IETF.RFC.`5234`.CoreRules.octet)
+            try IETF.RFC.`5234`.Validator.validate([0x80], against: IETF.RFC.`5234`.CoreRules.octet)
+            try IETF.RFC.`5234`.Validator.validate([0xFF], against: IETF.RFC.`5234`.CoreRules.octet)
         }
     }
 }
 
-extension `RFC_5234.CoreRules Tests`.Test {
+extension `IETF.RFC.5234.CoreRules Tests`.Test {
     @Suite
     struct Lookup {
         @Test
@@ -300,14 +300,14 @@ extension `RFC_5234.CoreRules Tests`.Test {
             ]
 
             for name in expectedNames {
-                #expect(RFC_5234.CoreRules.all[name] != nil, "Missing core rule: \(name)")
+                #expect(IETF.RFC.`5234`.CoreRules.all[name] != nil, "Missing core rule: \(name)")
             }
         }
 
         @Test
         func `Lookup by name works`() throws {
-            let digit = RFC_5234.CoreRules.all["DIGIT"]!
-            try RFC_5234.Validator.validate([0x35], against: digit)
+            let digit = IETF.RFC.`5234`.CoreRules.all["DIGIT"]!
+            try IETF.RFC.`5234`.Validator.validate([0x35], against: digit)
         }
     }
 }

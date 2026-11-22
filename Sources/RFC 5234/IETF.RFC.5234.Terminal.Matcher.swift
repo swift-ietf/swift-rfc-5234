@@ -1,4 +1,4 @@
-extension RFC_5234.Terminal {
+extension IETF.RFC.`5234`.Terminal {
     enum Matcher: Hashable, Sendable, Codable {
         case string(String, caseSensitive: Bool)
         case byteValue(UInt8)

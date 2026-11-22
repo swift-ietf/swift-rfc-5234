@@ -1,24 +1,24 @@
-extension RFC_5234 {
+extension IETF.RFC.`5234` {
 
     public enum Validator {}
 }
 
-extension RFC_5234.Validator {
+extension IETF.RFC.`5234`.Validator {
 
     public static func validate(
         _ bytes: [UInt8],
-        against rule: RFC_5234.Rule
+        against rule: IETF.RFC.`5234`.Rule
     ) throws(Error) {
         try validate(bytes, against: rule, in: [])
     }
 
     public static func validate(
         _ bytes: [UInt8],
-        against rule: RFC_5234.Rule,
-        in grammar: [RFC_5234.Rule]
+        against rule: IETF.RFC.`5234`.Rule,
+        in grammar: [IETF.RFC.`5234`.Rule]
     ) throws(Error) {
-        var rules: [String: RFC_5234.Rule] = [:]
-        for core in RFC_5234.CoreRules.all.values {
+        var rules: [String: IETF.RFC.`5234`.Rule] = [:]
+        for core in IETF.RFC.`5234`.CoreRules.all.values {
             rules[core.name.lowercased()] = core
         }
         for defined in grammar {
@@ -44,7 +44,7 @@ extension RFC_5234.Validator {
     }
 }
 
-extension RFC_5234.Validator {
+extension IETF.RFC.`5234`.Validator {
     private struct Expansion: Hashable {
         let name: String
         let offset: Int
@@ -52,12 +52,12 @@ extension RFC_5234.Validator {
 
     private struct Matcher {
         let bytes: [UInt8]
-        let rules: [String: RFC_5234.Rule]
+        let rules: [String: IETF.RFC.`5234`.Rule]
         var expanding: Set<Expansion>
         var memo: [Expansion: Set<Int>] = [:]
 
         mutating func ends(
-            of element: RFC_5234.Element,
+            of element: IETF.RFC.`5234`.Element,
             from offset: Int
         ) throws(Error) -> Set<Int> {
             switch element {

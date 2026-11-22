@@ -1,13 +1,13 @@
 import ASCII
 
-extension RFC_5234 {
+extension IETF.RFC.`5234` {
 
     public struct Terminal: Hashable, Sendable, Codable {
         let matcher: Matcher
     }
 }
 
-extension RFC_5234.Terminal {
+extension IETF.RFC.`5234`.Terminal {
 
     public static func string(_ string: String) -> Self {
         Self(matcher: .string(string, caseSensitive: false))
