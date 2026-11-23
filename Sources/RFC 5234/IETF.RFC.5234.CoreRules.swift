@@ -46,37 +46,37 @@ extension IETF.RFC.`5234`.CoreRules {
 
     public static let sp = IETF.RFC.`5234`.Rule(
         name: "SP",
-        element: .terminal(.byte(INCITS.`4`.`1986`.SPACE.sp))
+        element: .terminal(.byte(INCITS.`4`.SPACE.sp))
     )
 
     public static let htab = IETF.RFC.`5234`.Rule(
         name: "HTAB",
-        element: .terminal(.byte(INCITS.`4`.`1986`.Character.Control.htab))
+        element: .terminal(.byte(INCITS.`4`.Character.Control.htab))
     )
 
     public static let cr = IETF.RFC.`5234`.Rule(
         name: "CR",
-        element: .terminal(.byte(INCITS.`4`.`1986`.Character.Control.cr))
+        element: .terminal(.byte(INCITS.`4`.Character.Control.cr))
     )
 
     public static let lf = IETF.RFC.`5234`.Rule(
         name: "LF",
-        element: .terminal(.byte(INCITS.`4`.`1986`.Character.Control.lf))
+        element: .terminal(.byte(INCITS.`4`.Character.Control.lf))
     )
 
     public static let crlf = IETF.RFC.`5234`.Rule(
         name: "CRLF",
         element: .sequence([
-            .terminal(.byte(INCITS.`4`.`1986`.Character.Control.cr)),
-            .terminal(.byte(INCITS.`4`.`1986`.Character.Control.lf)),
+            .terminal(.byte(INCITS.`4`.Character.Control.cr)),
+            .terminal(.byte(INCITS.`4`.Character.Control.lf)),
         ])
     )
 
     public static let wsp = IETF.RFC.`5234`.Rule(
         name: "WSP",
         element: .alternation([
-            .terminal(.byte(INCITS.`4`.`1986`.SPACE.sp)),
-            .terminal(.byte(INCITS.`4`.`1986`.Character.Control.htab)),
+            .terminal(.byte(INCITS.`4`.SPACE.sp)),
+            .terminal(.byte(INCITS.`4`.Character.Control.htab)),
         ])
     )
 }
@@ -85,7 +85,7 @@ extension IETF.RFC.`5234`.CoreRules {
 
     public static let dquote = IETF.RFC.`5234`.Rule(
         name: "DQUOTE",
-        element: .terminal(.byte(INCITS.`4`.`1986`.Character.Graphic.quotationMark))
+        element: .terminal(.byte(INCITS.`4`.Character.Graphic.quotationMark))
     )
 }
 
